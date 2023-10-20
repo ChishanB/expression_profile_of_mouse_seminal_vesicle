@@ -72,14 +72,15 @@ level_colors_darker <- c("Acr" = "#663C53", "Control" = "#004f39")
 
 meancentred_PCA <- prcomp(t(Mean_centred), center = F)
 
-meancentred_PCA_plot <-
+#meancentred_PCA_plot <-
   autoplot(meancentred_PCA, 
            data = sample_metadata, 
            colour = "Treatment_group", 
            frame = TRUE, 
            frame.type = 'norm') + scale_fill_manual(values = level_colors) +
   scale_color_manual(values = level_colors_darker) + labs("Treatment group") +
-  guides(fill = guide_legend(title = "Treatment group")) + theme_minimal()
+  guides(fill = guide_legend(title = "Treatment group")) + theme_minimal() +
+  geom_label_repel(aes(label = colnames(Mean_centred)))
 
 #ggsave(plot = meancentred_PCA_plot, filename = "./2_figures/meancentred_TPM_PCA.png", width = 8, height = 6, dpi = 300)
 
@@ -92,7 +93,8 @@ zscored_PCA_plot <-
            frame = TRUE, 
            frame.type = 'norm') + scale_fill_manual(values = level_colors) +
   scale_color_manual(values = level_colors_darker) + labs("Treatment group") +
-  guides(fill = guide_legend(title = "Treatment group")) + theme_minimal()
+  guides(fill = guide_legend(title = "Treatment group")) + theme_minimal() +
+  geom_label_repel(aes(label = colnames(Z_scored)))
 
 #ggsave(plot = zscored_PCA_plot, filename = "./2_figures/zscored_TPM_PCA.png", width = 8, height = 6, dpi = 300)
 
@@ -127,7 +129,7 @@ colours <- c("Control" = "#D55E00", "Acr" = "#332288")
 PCA_plot <- 
   plotPCA(vsd, intgroup = "Treatment_group", ntop = 500) +
   scale_color_manual(values = colours) +
-  stat_ellipse(type = "norm", level = 0.95, alpha = 0.8) + theme_minimal()+
+  stat_ellipse(type = "norm", level = 0.95, alpha = 0.8) + theme_minimal() +
     geom_label_repel(aes(label=colnames(vsd)))
 
 # Save the raw counts PCA plot
@@ -162,6 +164,5 @@ res_df_significant <- res_df %>%
 # How many RNAs downregulated in response to acrylamide exposure (treated)?
  nrow(res_df_significant [res_df_significant $ log2FoldChange < 0, ])
 #    11 downregulated RNAs
-
 
 
