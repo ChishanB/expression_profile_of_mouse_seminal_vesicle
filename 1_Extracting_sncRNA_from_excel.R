@@ -107,6 +107,9 @@ raw_counts <-
 raw_counts_filtered <- raw_counts %>%
   filter(rowSums(. >= min.counts) >= min.samples)
 
+# Save the raw_counts data frame for later analysis
+#write.csv(raw_counts_filtered, file = "./1_data/sncRNA/sncRNA_raw_counts_filtered.csv", row.names = TRUE)
+
 # Flitering step (above) explained:
 # rowSums(. >= min.counts): This part calculates the row sums for each row where 
 # the condition >= min.counts is met. In other words, it calculates the number of samples (columns) where the count is greater than or equal to min.counts.
@@ -132,12 +135,6 @@ ggplot(raw_colsums, aes(x = sample.IDs, y = raw_colsums, fill = Treatment_group)
   scale_x_discrete(limits = c("P1", "P3", "P4", "P5", "A2", "A3", "A4", "A5"))
 
 #ggsave(filename = "./2_figures/1_rawcounts_QC.png", width = 6, height = 4)
-
-# Save the raw_counts data frame for later analysis
-
-#write.csv(raw_counts_filtered, file = "./1_data/sncRNA/sncRNA_raw_counts_filtered.csv", row.names = TRUE)
-
-
 
 # Finding these sncRNAs in the TPM dataset
 
