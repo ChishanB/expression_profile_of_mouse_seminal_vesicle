@@ -1,11 +1,14 @@
 
 # Written: 31/8/23
-# Most recent update: 17/9/23
+# Most recent update: 20/10/23
 
-# Purpose: Extracting the sheet from the mixomics_data.xlsx containing the 
+# Purpose: Extracting the sheet from the dataset containing the 
 # sncRNA RNA-Seq dataset, and splitting the columns into separate csv files
 # for use in later scripts. Then, performing some initial quality checks using bar graphs.
 # I.e., getting a 'first look' at the data before performing PCA.
+
+# ****NOTE: Mixomics has not been utilised on this data or within this project. Mixomics 
+# analysis is one of the future directions of this project.
 
 # Author: Chishan Burch
 # Contact: chishanburch@gmail.com
@@ -32,7 +35,7 @@ gene_metadata$sRNA.ID_type <- sub(" ", "_", gene_metadata$sRNA.ID_type)
 gene_metadata$Type <- sub(" ", "_", gene_metadata$Type)
 
 # Save the gene metadata data frame as a csv
-write.csv(gene_metadata, file = "./1_data/sncRNA/sncRNA_gene_metadata.csv", row.names = FALSE)
+#write.csv(gene_metadata, file = "./1_data/sncRNA/sncRNA_gene_metadata.csv", row.names = FALSE)
 
 # In sncRNA, select() the columns containing sncRNA.ID_type and the raw counts information,
 # and store them in "raw_counts". Rename counts columns so the data frame looks cleaner
@@ -128,7 +131,15 @@ ggplot(raw_colsums, aes(x = sample.IDs, y = raw_colsums, fill = Treatment_group)
   labs(x = "Sample IDs", y = "Sequencing depth (raw counts)", fill = "Treatment Group") +
   scale_x_discrete(limits = c("P1", "P3", "P4", "P5", "A2", "A3", "A4", "A5"))
 
-ggsave(filename = "./2_figures/1_rawcounts_QC.png", width = 6, height = 4)
+#ggsave(filename = "./2_figures/1_rawcounts_QC.png", width = 6, height = 4)
+
+# Save the raw_counts data frame for later analysis
+
+#write.csv(raw_counts_filtered, file = "./1_data/sncRNA/sncRNA_raw_counts_filtered.csv", row.names = TRUE)
+
+
+
+# Finding these sncRNAs in the TPM dataset
 
 # Now that we've identified the rows of sncRNAs meeting the raw counts threshold, 
 # in raw_counts, we need to seek these same sncRNAs within the TPM_counts data frame.
@@ -162,9 +173,5 @@ ggplot(TPM_colsums, aes(x = sample.IDs, y = TPM_colsums, fill = Treatment_group)
 
 #ggsave(filename = "./2_figures/2_TPMcounts_QC.png", width = 6, height = 4)
 
-# Save the adjusted raw_counts data frame for later use in differential expression
-# and PCA analysis
-raw_counts_filtered
-#write.csv(raw_counts_filtered, file = "./1_data/sncRNA/sncRNA_raw_counts_filtered.csv", row.names = TRUE)
 
 
