@@ -72,7 +72,7 @@ level_colors_darker <- c("Acr" = "#663C53", "Control" = "#004f39")
 
 meancentred_PCA <- prcomp(t(Mean_centred), center = F)
 
-#meancentred_PCA_plot <-
+meancentred_PCA_plot <-
   autoplot(meancentred_PCA, 
            data = sample_metadata, 
            colour = "Treatment_group", 
