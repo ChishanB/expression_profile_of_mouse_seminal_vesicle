@@ -2,9 +2,13 @@
 # Written: 13/10/23
 # Most recent update: 20/10/23
 
-# Purpose: Produce PCA plots from DEseq-analysed counts data. DEseq filters for the top 500 most 
-# differentially expressed. This was done because an initial PCA (not included in these scripts)
-# containing ALL sncRNAs possessing >=5 counts across >=3 samples showed no distinct separation.
+# Purpose: Read in filtered (>=5 counts across >=3 samples) raw and TPM counts.
+# Produce PCA plots from log2 transformed filtered TPM counts that have been 
+# mean-centered (first PCA) and z-scored (second PCA). 
+# Next, produce PCA from the top 500 most differentially expressed sncRNAs as determined
+# by performing DE analysis on the raw counts. Perform vst normalisation on the
+# dds object before plotting. Lastly, creating 2 csvs containing DEseq results for later
+# use. "sncRNA_DeSeq_padj_under_0.05.csv" and "sncRNA_DeSeq_complete.csv"
 
 # Author: Chishan Burch
 # Contact: chishanburch@gmail.com
@@ -95,7 +99,8 @@ zscored_PCA_plot <-
 
 # Clear separation was not observed between the two treatment groups for the zscored 
 # or mean centered TPM counts, so it was decided that a PCA should be made utilising the 
-# top 500 most differentially expressed sncRNAs. These are identified with DE analysis.
+# top 500 most differentially expressed sncRNAs as assessed by DE analysis. ntop = 500 is specified
+# when plotting the PCA.
 
 # DE analysis needs to be performed on raw counts, and not TPM because DESeq has its own forms of normalisation.
 
@@ -107,17 +112,18 @@ dds <- DESeqDataSetFromMatrix(countData = sncRNA_counts,
                               desig = ~ Treatment_group)
 
 
-# Raw counts PCA plot
-
 # Perform variance standardisation with blind = T so the computer is not aware 
 # of which treatment group the samples belong to (i.e., unsupervised analysis).
 
 vsd <- vst(dds, blind = T)
 vst_matrix <- assay(vsd)
 
+
+# Raw counts PCA plot
+
 colours <- c("Control" = "#D55E00", "Acr" = "#332288")
 
-
+# ntop 500 specifies that we want the top 500 most differentially expressed sncRNAs to form the raw counts PCA
 PCA_plot <- 
   plotPCA(vsd, intgroup = "Treatment_group", ntop = 500) +
   scale_color_manual(values = colours) +
@@ -127,5 +133,34 @@ PCA_plot <-
 # Save the raw counts PCA plot
 #ggsave(plot = PCA_plot, filename = "./2_figures/Principal_component_analysis.png", width = 9, height = 6, dpi = 300)
 
+# Re-create dds without the vst normalisation (pie chart won't require the vst, and the vst will simply be
+# re-done for the pheatmap. Save remade DEseq results for later use in pheatmap, piecharts etc
+
+dds <- DESeqDataSetFromMatrix(countData = sncRNA_counts, # Needs to be raw counts with rownames as RNAs
+                              colData = sample_metadata, #data frame of meta data (rownames are samples)
+                              desig = ~ Treatment_group) # Column in metadata for treatment
+
+
+dds <- DESeq(dds)
+
+res <- results(dds) 
+
+res_df <- as.data.frame(res) # Coerce into a more easily accessible format.
+
+# write.csv(res_df, file = "./1_data/sncRNA/sncRNA_DeSeq_complete.csv", row.names = TRUE)
+
+# Filter dds results based on a significance threshold of p-adjusted < 0.05.
+res_df_significant <- res_df %>%
+  filter(padj <= 0.05)
+
+# Save dds results meeting significance threshold. 
+# write.csv(res_df_significant, file = "./1_data/sncRNA/sncRNA_DeSeq_padj_under_0.05.csv", row.names = FALSE)
+
+# How many RNAs upregulated in response to acrylamide exposure (treated)?
+# nrow(res_df_significant [res_df_significant $ log2FoldChange > 0, ])
+#    12 upregulated RNAs
+# How many RNAs downregulated in response to acrylamide exposure (treated)?
+# nrow(res_df_significant [res_df_significant $ log2FoldChange < 0, ])
+#    46 downregulated RNAs
 
 
