@@ -157,10 +157,11 @@ res_df_significant <- res_df %>%
 # write.csv(res_df_significant, file = "./1_data/sncRNA/sncRNA_DeSeq_padj_under_0.05.csv", row.names = FALSE)
 
 # How many RNAs upregulated in response to acrylamide exposure (treated)?
-# nrow(res_df_significant [res_df_significant $ log2FoldChange > 0, ])
-#    12 upregulated RNAs
+ nrow(res_df_significant [res_df_significant $ log2FoldChange > 0, ])
+#    45 upregulated RNAs
 # How many RNAs downregulated in response to acrylamide exposure (treated)?
-# nrow(res_df_significant [res_df_significant $ log2FoldChange < 0, ])
-#    46 downregulated RNAs
+ nrow(res_df_significant [res_df_significant $ log2FoldChange < 0, ])
+#    11 downregulated RNAs
+
 
 
