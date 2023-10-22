@@ -1,6 +1,5 @@
-
-# expression_profile_of_mouse_seminal_vesicle
-Advancing seminal vesicle biology by establishing a basic bioniformatic analysis pipeline (DESeq2, PCA)
+Advancing seminal vesicle biology by establishing a basic bioniformatic analysis pipeline for
+analysing differential expression of small non-coding RNAs 
 
 # Background
 The seminal vesicle is the primary contributor to seminal plasma and is responsible for producing an array 
@@ -13,5 +12,9 @@ The 8 scripts comprising expression_profile_of_mouse_seminal_vesicle analyse the
 small non-coding RNAs in the mouse seminal vesicle following acrylamide insult, and analyse target gene 
 prediction for differentially expressed micro RNAs. 
 
-# Data
+# Data avaliability
 The data itself is not included in this repository because I do not have the rights to publish it. 
+
+# Some key packages
+biomaRT, DESeq2, clusterProfiler, org.Mm.eg.db, AnnotationDbi, pheatmap
+
