@@ -19,6 +19,7 @@
 library(openxlsx)
 library(dplyr)
 library(data.table)
+library(tibble)
 
 # Read in the Excel file and specify the sheet desired. Store it in the variable "sncRNA"
 sncRNA <- read.xlsx("./1_data/mixomics_data.xlsx", sheet = "sncRNA")
