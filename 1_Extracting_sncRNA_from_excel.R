@@ -7,9 +7,6 @@
 # for use in later scripts. Then, performing some initial quality checks using bar graphs.
 # I.e., getting a 'first look' at the data before performing PCA.
 
-# ****NOTE: Mixomics has not been utilised on this data or within this project. Mixomics 
-# analysis is one of the future directions of this project.
-
 # Author: Chishan Burch
 # Contact: chishanburch@gmail.com
 
@@ -102,6 +99,7 @@ raw_counts <-
   data.frame() %>%
   column_to_rownames(var = "sRNA.ID_type")
 
+
 ### Note: The filtering was not working until I set the row names as the sncRNA
 ### ids. I think it was counting the numeric row names as the row sums.
 
@@ -133,7 +131,10 @@ custom_colours <- c("#332288", "#D55E00")
 ggplot(raw_colsums, aes(x = sample.IDs, y = raw_colsums, fill = Treatment_group)) +
   geom_bar(stat = "identity", width = 0.4) + scale_fill_manual(values = custom_colours) +
   labs(x = "Sample IDs", y = "Sequencing depth (raw counts)", fill = "Treatment Group") +
-  scale_x_discrete(limits = c("P1", "P3", "P4", "P5", "A2", "A3", "A4", "A5"))
+  scale_x_discrete(limits = c("P1", "P3", "P4", "P5", "A2", "A3", "A4", "A5")) + 
+  theme(axis.text = element_text(size = 12), axis.title = element_text(size = 14), 
+        legend.text = element_text(size = 12), legend.title = element_text(size = 14))
+
 
 #ggsave(filename = "./2_figures/1_rawcounts_QC.png", width = 6, height = 4)
 
@@ -162,14 +163,16 @@ TPM_colsums <- cbind(TPM_colsums, sample_metadata)
 TPM_colsums$sample.IDs <- factor(TPM_colsums$sample.IDs, levels = c("P1", "P3", "P4", "P5", "A2", "A3", "A4", "A5"))
 
 # Plot the TPM sequencing depth of sncRNAs meeting the raw counts threshold (by sample)
-custom_colours2 <- c("#CC79A7", "#009E73")
+custom_colours2 <- c("#ae5a89", "#009E73")
 
 ggplot(TPM_colsums, aes(x = sample.IDs, y = TPM_colsums, fill = Treatment_group)) +
   geom_bar(stat = "identity", width = 0.4) + scale_fill_manual(values = custom_colours2) +
   labs(x = "Sample IDs", y = "Sequencing depth (TPM)", fill = "Treatment Group") +
-  scale_x_discrete(limits = c("P1", "P3", "P4", "P5", "A2", "A3", "A4", "A5"))
+  scale_x_discrete(limits = c("P1", "P3", "P4", "P5", "A2", "A3", "A4", "A5"))+ 
+  theme(axis.text = element_text(size = 12), axis.title = element_text(size = 14), 
+        legend.text = element_text(size = 12), legend.title = element_text(size = 14))
+
 
 #ggsave(filename = "./2_figures/2_TPMcounts_QC.png", width = 6, height = 4)
-
 
 
